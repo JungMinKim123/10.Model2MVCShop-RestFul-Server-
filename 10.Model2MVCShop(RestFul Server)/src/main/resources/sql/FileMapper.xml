@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="FileMapper">
+
+<!-- 
+<resultMap type="product" id="fileSelectMap">
+  	<result property="prodNo" column="prod_no" jdbcType="NUMERIC"/>
+  	<result property="product.fileName" column="image_file" jdbcType="VARCHAR"/> 
+  </resultMap>
+  -->
+  
+<update id="insertFile" parameterType="java.util.List">
+	<foreach collection="list" item="item" open="INSERT ALL" close="SELECT * FROM DUAL" separator=" ">
+  INTO files (prod_no, image_file)
+  VALUES (seq_product_prod_no.CURRVAL, #{item:VARCHAR})
+  </foreach>
+</update>
+
+<select id="findFile" resultType="String">
+  SELECT
+  image_file
+  FROM files
+  WHERE prod_no = #{prodNo}
+</select>
+
+ 
+<update id="updateFile" parameterType="product">
+	<foreach collection="fileName" item="item" open="DECLARE BEGIN" close=";END;" separator=";">
+  UPDATE files
+  <set>
+    image_file = #{item:VARCHAR}
+  </set>
+    WHERE prod_no= #{prodNo}
+  </foreach>
+</update>
+ 
+</mapper>
