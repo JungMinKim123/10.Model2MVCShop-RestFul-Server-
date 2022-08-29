@@ -1,6 +1,8 @@
 package com.model2.mvc.service.product.Impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -48,6 +50,13 @@ public class ProductServiceimpl implements ProductService{
 	
 	public Product getProduct(int productNo) throws Exception{
 		return productDao.findProduct(productNo);
+	}
+
+	public List<String> getProdName(String product) throws Exception{
+		
+		List<String> list = productDao.getProdName(product);
+		
+		return list;
 	}
 
 	public List<String> getFile(Product product) throws Exception{

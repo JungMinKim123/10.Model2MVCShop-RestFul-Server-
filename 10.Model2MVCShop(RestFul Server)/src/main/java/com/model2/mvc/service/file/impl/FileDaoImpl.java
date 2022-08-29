@@ -38,7 +38,7 @@ public class FileDaoImpl implements FileDao {
 	@Override
 	public void updateFile(Product product) throws Exception {
 		// TODO Auto-generated method stub
-		sqlSession.insert("FileMapper.updateFile",product);
+		sqlSession.update("FileMapper.updateFile",product);
 	}
 
 }

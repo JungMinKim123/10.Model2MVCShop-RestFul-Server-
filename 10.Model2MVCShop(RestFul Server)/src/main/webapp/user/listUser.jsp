@@ -26,9 +26,28 @@
 	$(".ct_list_pop td:nth-child(3)").on("click", function() {
 		//alert(  $( this ).text().trim() );
 		//console.log ($($(this).text().trim()).html());
-		self.location = "/user/getUser?userId="+$(this).text().trim();
+		//self.location = "/user/getUser?userId="+$(this).text().trim();
+		///*
+		var userId = $(this).text().trim();
+		$.getJSON("/user/json/getUser/"+userId,
+				
+				function (JSONData, status) {
+					
+					var displayValue = "<h3>"
+											+"아이디 : "+JSONData.userId+"<br/>"
+											+"이  름 : "+JSONData.userName+"<br/>"
+											+"이메일 : "+JSONData.email+"<br/>"
+											+"ROLE : "+JSONData.role+"<br/>"
+											+"등록일 : "+JSONData.rageDateString+"<br/>"
+											+"</h3>";
+					$("h3").remove();
+					$("#"+userId).html(displayValue);
+				}
+			);
+		
+		$("#"+userId).dialog();
+	//*/
 	});
-	
 	$(".ct_list_pop td:nth-child(3)").css("color","red");
 	$("h7").css("color","red");
 	
@@ -39,6 +58,7 @@
 	//console.log ($(".ct_list_pop:nth-child(4)").html());
 	//console.log ($(".ct_list_pop:nth-child(5)").html());
 	//console.log ($(".ct_list_pop:nth-child(6)").html());
+	
 	});
 </script>
 
@@ -146,7 +166,7 @@
 			<td align="left">${user.email}</td>		
 		</tr>
 		<tr>
-		<td colspan="11" bgcolor="D6D7D6" height="1"></td>
+		<td id="${user.userId }" colspan="11" bgcolor="D6D7D6" height="1"></td>
 		</tr>
 	</c:forEach>
 </table>

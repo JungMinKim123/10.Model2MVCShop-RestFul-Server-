@@ -131,7 +131,7 @@ public class ProductController {
 				file.add(multipartFile.get(i).getOriginalFilename());
 			}
 		}
-				prod.setFileName(file);
+		prod.setFileName(file);
 		System.out.println(prod.getFileName().toString());
 		productService.updateProduct(prod);
 		productService.updateFile(prod);

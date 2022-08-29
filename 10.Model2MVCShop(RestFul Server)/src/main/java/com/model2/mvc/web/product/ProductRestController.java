@@ -4,6 +4,7 @@ import java.io.File;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -106,6 +107,16 @@ public class ProductRestController {
 		return productService.getProduct(prodNo);
 	}
 	
+	@RequestMapping(value = "json/getProdName/{prodName}", method = RequestMethod.GET)
+	public List<String> getProdName(@PathVariable String prodName) throws Exception{
+		
+		System.out.println("/product/json/getProdName : GET");
+		
+		System.out.println("리턴받는 값 : "+productService.getProdName(prodName));
+		
+		return productService.getProdName(prodName);
+	}
+	
 //	@RequestMapping("/updateProduct.do")
 	@RequestMapping(value = "json/updateProduct", method = RequestMethod.POST)
 	public Map<String, Object> updateProduct(@RequestBody Product prod) throws Exception{
@@ -138,7 +149,7 @@ public class ProductRestController {
 	@RequestMapping(value = "json/listProduct")
 	public Map<String, Object> listProduct(@RequestBody Search search) throws Exception{
 		
-		System.out.println("json/product/listProduct : GET / POST");
+		System.out.println("/product/json/product/listProduct : GET / POST");
 		
 		if(search.getCurrentPage() == 0) {
 			search.setCurrentPage(1);

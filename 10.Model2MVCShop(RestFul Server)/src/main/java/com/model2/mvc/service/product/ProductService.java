@@ -21,4 +21,6 @@ public interface ProductService {
 	public List<String> getFile(Product product) throws Exception;
 	
 	public void updateFile(Product product) throws Exception;
+	
+	public List<String> getProdName(String product) throws Exception;
 }

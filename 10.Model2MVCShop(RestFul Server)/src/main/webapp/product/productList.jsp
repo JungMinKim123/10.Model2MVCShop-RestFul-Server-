@@ -28,37 +28,107 @@
 <link rel="stylesheet" href="/css/admin.css" type="text/css">
 
 <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 <script type="text/javascript">
 
 	function fncGetUserList(currentPage) {
 		
 		$("#currentPage").val(currentPage);
-		$("form").attr("method","POST").attr("action", "/product/listProduct?menu=${menu}").submit();
+		$("form").attr("method", "post").attr("action", "/product/listProduct?menu=${menu}").submit();
+		//$("form").attr("action", "/product/listProduct?menu=${menu}").submit();
 	}
 	
 	$(function() {
+		
+		$("input[name='searchKeyword']").bind("keydown", function(key) {
+			console.log($("input[name='searchKeyword']").val());
+			if(key.keyCode==13){
+			//console.log("asdf");
+				$("form").attr("method", "post").attr("action", "/product/listProduct?menu=${menu}").submit();
+			}
+		}); 
+		
 		$("td.ct_btn01:contains('검색')").bind("click", function() {
-			fncGetUserList('1');
+			$("form").attr("method", "post").attr("action", "/product/listProduct?menu=${menu}").submit();
 		});
 		
 		$(".ct_list_pop td:nth-child(3)").bind("click", function() {
 		//alert($("#${prod.prodNo}").val());
 			if(${menu=='manage'}){
+				
 				self.location = "/product/updateProduct?prodNo="+$(this).parent().attr("id").trim()+"&menu=${ menu }";
+				
 			}
 			if(${menu=='search'}){
+				
 				self.location = "/product/getProduct?prodNo="+$(this).parent().attr("id").trim()+"&menu=${ menu }";
+				
+				//console.log($(this).parent().attr("id").trim());
+				
+				var prodNo = $(this).parent().attr("id").trim();
+				
+				$.getJSON("/product/json/getProduct/"+prodNo,
+						
+						function(JSONData, status) {
+					
+							//console.log("updateProduct = ? : "+JSONData.prodDetail);
+							
+							var displayValue = "<h3 id='dialog' title='Basic dialog'>"
+													+"상품번호 : "+JSONData.prodNo+"<br/>"
+													+"상품명 : "+JSONData.prodName+"<br/>"
+													//+"상품이미지 : "+JSONData.fileName+"<br/>"
+													+"상품상세정보 : "+JSONData.prodDetail+"<br/>"
+													+"제조일자 : "+JSONData.manuDate+"<br/>"
+													+"가격 : "+JSONData.price+"<br/>"
+													//+"등록일자 : "+JSONData.regDate+"<br/>"
+													+"</h3>";
+							$("h3").remove();
+							
+							//$("td[id='"+prodNo+"']").html(displayValue);
+							//$("td[id='"+prodNo+"']").accordion();
+							$($("td[id='"+prodNo+"']").html(displayValue)).dialog();
+							//$(function () {
+							//$( $("td[id='"+prodNo+"']").html(displayValue)).dialog({
+							//	autoOpen: false,	
+							//});
+						//		$("h3[id='dialog']").dialog();
+						
+						//	});
+					}
+				);
+				
 			}
 			});
 		
 		$("input[name='respone']").bind("click", function() {
-				console.log('sadfsaf');
+				//console.log('sadfsaf');
 				self.location = "/purchase/updateTranCode?prodNo="+$(this).parent().parent().attr("id")+"&tranCode=2";
 		});
 	});
-	
-	
-	
+///*
+
+	$(function() {
+		
+		$("input[name='searchKeyword']").bind("keyup", function() {
+			
+		    	//console.log($("input[name='searchKeyword']").val());
+		    	
+		    	var keyword =  $("input[name='searchKeyword']").val();
+		    	
+		    	$.getJSON("/product/json/getProdName/"+keyword,
+		    			
+		    		function(JSONData, status) {
+						
+		    			console.log("JSONData : "+JSONData);
+
+		    			//var displayValue = JSONData;
+						
+		    			$("input[name='searchKeyword']").autocomplete({ source : JSONData});
+		    	});
+		});
+	});
+	//*/
 </script>
 </head>
 
@@ -94,7 +164,8 @@
 					
 					<td align="right"><select name="searchCondition"
 						class="ct_input_g" style="width: 80px">
-							<option value="1" ${ ! empty search.searchCondition && search.searchCondition==1 ? "selected" : "" } >상품명</option>
+							<option value="1" ${ ! empty search.searchCondition && search.searchCondition==1 ? "selected" : "
+							" } >상품명</option>
 					</select> <input type="text" name="searchKeyword" value="${ search.searchKeyword }" class="ct_input_g"
 						style="width: 200px; height: 19px" /></td>
 							
@@ -189,7 +260,7 @@
 				style="margin-top: 10px;">
 				<tr>
 					<td align="center">
-						<input type= "hidden" id = "currentPage" name="currentPage" value = ""/>
+						<input type= "hidden" id = "currentPage" name="currentPage" value = "1"/>
 					
 					<jsp:include page="../common/pageNavigator.jsp"/>
 					
@@ -202,6 +273,9 @@
 		
 		</c:if>
 		<c:if test="${ menu=='search'}">
+		<!-- 
+		<form name="detailForm" method="post">
+		 -->
 		<form name="detailForm">
 
 			<table width="100%" height="37" border="0" cellpadding="0"
@@ -304,7 +378,7 @@
 					</td>
 				</tr>
 				<tr>
-				<td colspan="11" bgcolor="D6D7D6" height="1"></td>
+				<td id="${ prod.prodNo }" title="상품정보" colspan="11" bgcolor="D6D7D6" height="1"></td>
 				</tr>
 				</c:forEach>
 			</table>
@@ -313,7 +387,7 @@
 				style="margin-top: 10px;">
 				<tr>
 					<td align="center">
-						<input type="hidden" id="currentPage" name="currentPage" value=""/>
+						<input type="hidden" id="currentPage" name="currentPage" value="1"/>
 						<jsp:include page="../common/pageNavigator.jsp" />
 						
 					</td>
